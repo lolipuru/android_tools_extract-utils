@@ -850,6 +850,7 @@ function write_product_packages() {
     local T_O_LIB32=$(prefix_match "odm/lib/")
     local T_O_LIB64=$(prefix_match "odm/lib64/")
     local O_RFSA=$(prefix_match "odm/lib/rfsa/")
+    local O_MOUNT_RFSA=$(prefix_match "odm/mount/camera/lib/rfsa/")
     local O_MULTILIBS=$(do_comm -12 "$T_O_LIB32" "$T_O_LIB64")
     local O_LIB32=$(do_comm -23 "$T_O_LIB32" "$O_MULTILIBS")
     local O_LIB32=$(grep -v 'rfsa/' <(echo "$O_LIB32"))
@@ -859,6 +860,7 @@ function write_product_packages() {
         write_blueprint_packages "SHARED_LIBRARIES" "odm" "32" "$O_LIB32"
         write_blueprint_packages "SHARED_LIBRARIES" "odm" "64" "$O_LIB64"
         write_blueprint_packages "RFSA" "odm" "" "$O_RFSA"
+        write_blueprint_packages "RFSA" "odm/mount/camera" "" "$O_MOUNT_RFSA"
     } >>"$ANDROIDBP"
 
     # APEX
@@ -1415,6 +1417,7 @@ function parse_file_list() {
                 ("$SRC_FILE" == *"lib/"*".so" ||
                 "$SRC_FILE" == *"lib64/"*".so" ||
                 "$SRC_FILE" == *"bin/"* ||
+                "$SRC_FILE" == *"mount/camera/lib/rfsa"* ||
                 "$SRC_FILE" == *"lib/rfsa"*) ]] ||
             [[ "$SRC_FILE" == *"etc/vintf/manifest/"* ]]; then
             IS_PRODUCT_PACKAGE=true
